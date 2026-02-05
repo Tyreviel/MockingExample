@@ -25,16 +25,15 @@ public final class PaymentProcessor {
 
     /**
      * Attempts to charge a given amount.
+
+     * Behavior:
      *
-     * <p>Behavior:</p>
-     * <ul>
-     *   <li>Rejects non-positive amounts</li>
-     *   <li>Charges via {@link PaymentGateway}</li>
-     *   <li>Persists a record in {@link PaymentRepository}</li>
-     *   <li>If successful: sends a confirmation via {@link PaymentNotifier}</li>
-     * </ul>
+     *   Rejects non-positive amounts
+     *   Charges via {@link PaymentGateway}
+     *   Persists a record in {@link PaymentRepository}
+     *   If successful: sends a confirmation via {@link PaymentNotifier}
      *
-     * <p>Notification failures should not flip a successful charge into a failed payment.</p>
+     * Notification failures should not flip a successful charge into a failed payment.
      *
      * @param userEmail email address to send confirmation to (required for success notifications)
      * @param amount amount to charge (must be > 0)

@@ -4,9 +4,7 @@ import java.util.Objects;
 
 /**
  * Minimal persisted record of a payment attempt.
- *
- * <p>Kept intentionally small for the school example; you can extend this later with IDs, timestamps,
- * provider references, etc.</p>
+
  */
 public final class PaymentRecord {
     private final double amount;

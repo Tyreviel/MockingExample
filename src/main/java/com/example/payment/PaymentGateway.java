@@ -3,7 +3,6 @@ package com.example.payment;
 /**
  * Abstraction over an external payment provider.
  *
- * <p>A production implementation might call Stripe/Adyen/etc. Tests can replace it with a stub.</p>
  */
 public interface PaymentGateway {
     /**
