@@ -172,4 +172,58 @@ class ShoppingCartTest {
         assertThat(cart.getTotalQuantity()).isEqualTo(5);
         assertThat(cart.getProducts()).containsEntry(product, 5);
     }
+
+    // ========== Calculate Total Price tests ==========
+
+    @Test
+    @DisplayName("should return 0.0 for an empty cart total price")
+    void shouldReturnZeroForEmptyCartTotalPrice() {
+        assertThat(cart.calculateTotalPrice()).isEqualTo(0.0);
+    }
+
+    @Test
+    @DisplayName("should calculate total price for a single product with single quantity")
+    void shouldCalculateTotalPriceForSingleProductSingleQuantity() {
+        Product product = new Product("P001", "Laptop", 1200.00);
+        cart.addProduct(product, 1);
+        assertThat(cart.calculateTotalPrice()).isEqualTo(1200.00);
+    }
+
+    @Test
+    @DisplayName("should calculate total price for a single product with multiple quantities")
+    void shouldCalculateTotalPriceForSingleProductMultipleQuantity() {
+        Product product = new Product("P001", "Laptop", 1200.00);
+        cart.addProduct(product, 3);
+        assertThat(cart.calculateTotalPrice()).isEqualTo(3600.00);
+    }
+
+    @Test
+    @DisplayName("should calculate total price for multiple products with multiple quantities")
+    void shouldCalculateTotalPriceForMultipleProductsMultipleQuantity() {
+        Product product1 = new Product("P001", "Laptop", 1200.00);
+        Product product2 = new Product("P002", "Mouse", 25.00);
+        Product product3 = new Product("P003", "Keyboard", 75.50);
+        cart.addProduct(product1, 1); // 1200.00
+        cart.addProduct(product2, 2); // 50.00
+        cart.addProduct(product3, 1); // 75.50
+        assertThat(cart.calculateTotalPrice()).isEqualTo(1200.00 + 50.00 + 75.50);
+    }
+
+    @Test
+    @DisplayName("should handle products with zero price correctly")
+    void shouldHandleProductsWithZeroPrice() {
+        Product product1 = new Product("P001", "Freebie", 0.00);
+        Product product2 = new Product("P002", "Paid Item", 100.00);
+        cart.addProduct(product1, 5);
+        cart.addProduct(product2, 1);
+        assertThat(cart.calculateTotalPrice()).isEqualTo(100.00);
+    }
+
+    @Test
+    @DisplayName("should handle products with decimal prices correctly")
+    void shouldHandleProductsWithDecimalPrices() {
+        Product product = new Product("P004", "Book", 19.99);
+        cart.addProduct(product, 2);
+        assertThat(cart.calculateTotalPrice()).isEqualTo(39.98);
+    }
 }

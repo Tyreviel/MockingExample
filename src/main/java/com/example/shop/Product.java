@@ -14,8 +14,8 @@ public class Product {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Product name cannot be null or blank");
         }
-        if (price <= 0) {
-            throw new IllegalArgumentException("Product price must be positive");
+        if (price < 0) {
+            throw new IllegalArgumentException("Product price cannot be negative");
         }
         this.id = id;
         this.name = name;
