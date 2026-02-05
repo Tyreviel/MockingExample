@@ -29,6 +29,35 @@ public class ShoppingCart {
         totalQuantity += quantity;
     }
 
+    public void removeProduct(Product product, int quantity) {
+        if (product == null) {
+            throw new IllegalArgumentException("Cannot remove a null product from the cart.");
+        }
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative.");
+        }
+        if (quantity == 0) {
+            return; // Do nothing if quantity is zero
+        }
+
+        if (!products.containsKey(product)) {
+            return; // Product not in cart, do nothing
+        }
+
+        int currentQuantity = products.get(product);
+        if (quantity > currentQuantity) {
+            throw new IllegalArgumentException("Cannot remove more products than are in the cart. Available: " + currentQuantity + ", Attempted to remove: " + quantity);
+        }
+
+        int newQuantity = currentQuantity - quantity;
+        if (newQuantity <= 0) {
+            products.remove(product);
+        } else {
+            products.put(product, newQuantity);
+        }
+        totalQuantity -= quantity;
+    }
+
     public int getTotalQuantity() {
         return totalQuantity;
     }
