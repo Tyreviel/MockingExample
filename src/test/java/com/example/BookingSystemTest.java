@@ -227,11 +227,29 @@ class BookingSystemTest {
     }
 
     /**
+     * Tests edge case: Booking with zero duration.
+     *
+     * Scenario: Start time equals end time (boundary condition)
+     * Expected: Booking succeeds (only past times are rejected)
+     */
+    @Test
+    void bookRoom_shouldAllowZeroDurationBooking() {
+        Room room = new Room("room1", "Test Room");
+        when(roomRepository.findById("room1")).thenReturn(Optional.of(room));
+
+        boolean result = bookingSystem.bookRoom("room1", futureStartTime, futureStartTime);
+
+        assertThat(result).isTrue();
+    }
+
+
+    /**
      * Tests edge case: Booking at exactly the current time.
      * 
      * Scenario: Start time equals current time (boundary condition)
      * Expected: Booking succeeds (only past times are rejected)
      */
+
     @Test
     @DisplayName("bookRoom should allow booking when startTime equals currentTime")
     void bookRoom_shouldAllowBooking_whenStartTimeEqualsCurrentTime() throws NotificationException {
