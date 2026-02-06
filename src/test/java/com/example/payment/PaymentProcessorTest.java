@@ -141,7 +141,7 @@ class PaymentProcessorTest {
         assertThat(savedRecord.amount()).isEqualTo(amount);
         assertThat(savedRecord.status()).isEqualTo(PaymentStatus.SUCCESS);
 
-        // Notifier was called, men kastade exception
+        // Notifier was called, but threw an exception
         verify(paymentNotifier).sendPaymentConfirmation(email, amount);
     }
 }
