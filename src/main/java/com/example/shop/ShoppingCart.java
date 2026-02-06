@@ -97,4 +97,29 @@ public class ShoppingCart {
         products.clear();
         totalQuantity = 0;
     }
+
+    public void updateProductQuantity(Product product, int newQuantity) {
+        if (product == null) {
+            throw new IllegalArgumentException("Cannot update quantity for a null product.");
+        }
+        if (newQuantity < 0) {
+            throw new IllegalArgumentException("New quantity cannot be negative.");
+        }
+
+        int currentQuantityInCart = products.getOrDefault(product, 0);
+
+        if (newQuantity == 0) {
+            if (products.containsKey(product)) {
+                products.remove(product);
+                totalQuantity -= currentQuantityInCart;
+            }
+        } else { // newQuantity > 0
+            products.put(product, newQuantity); // This will update the product details if key already exists, and set new quantity
+            if (currentQuantityInCart == 0) { // Product was not in cart, add new quantity
+                totalQuantity += newQuantity;
+            } else { // Product was in cart, update quantity difference
+                totalQuantity += (newQuantity - currentQuantityInCart);
+            }
+        }
+    }
 }

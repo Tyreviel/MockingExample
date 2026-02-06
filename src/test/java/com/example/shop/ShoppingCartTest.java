@@ -306,4 +306,55 @@ class ShoppingCartTest {
         assertThat(productInCart.getPrice()).isEqualTo(updatedProduct.getPrice()); // This will now fail
         assertThat(cart.getProducts().get(productInCart)).isEqualTo(2);
     }
+
+    // ========== Update Product Quantity tests ==========
+
+    @Test
+    @DisplayName("should update quantity of existing product")
+    void shouldUpdateQuantityOfExistingProduct() {
+        Product product = new Product("P001", "Laptop", 1200.00);
+        cart.addProduct(product, 2);
+        cart.updateProductQuantity(product, 5); // This method does not exist yet
+        assertThat(cart.getTotalQuantity()).isEqualTo(5);
+        assertThat(cart.getProducts()).containsEntry(product, 5);
+    }
+
+    @Test
+    @DisplayName("should remove product when updating quantity to zero")
+    void shouldRemoveProductWhenUpdatingQuantityToZero() {
+        Product product = new Product("P001", "Laptop", 1200.00);
+        cart.addProduct(product, 2);
+        cart.updateProductQuantity(product, 0); // This method does not exist yet
+        assertThat(cart.getTotalQuantity()).isEqualTo(0);
+        assertThat(cart.getProducts()).doesNotContainKey(product);
+    }
+
+    @Test
+    @DisplayName("should add product when updating quantity of non-existent product")
+    void shouldAddProductWhenUpdatingQuantityOfNonExistentProduct() {
+        Product product = new Product("P001", "Laptop", 1200.00);
+        cart.updateProductQuantity(product, 3); // This method does not exist yet
+        assertThat(cart.getTotalQuantity()).isEqualTo(3);
+        assertThat(cart.getProducts()).containsEntry(product, 3);
+    }
+
+    @Test
+    @DisplayName("should throw IllegalArgumentException when updating quantity with negative value")
+    void shouldThrowExceptionWhenUpdatingQuantityWithNegativeValue() {
+        Product product = new Product("P001", "Laptop", 1200.00);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cart.updateProductQuantity(product, -1); // This method does not exist yet
+        });
+        assertThat(cart.getTotalQuantity()).isEqualTo(0);
+        assertThat(cart.getProducts()).doesNotContainKey(product);
+    }
+
+    @Test
+    @DisplayName("should throw IllegalArgumentException when updating quantity of null product")
+    void shouldThrowExceptionWhenUpdatingQuantityOfNullProduct() {
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cart.updateProductQuantity(null, 1); // This method does not exist yet
+        });
+        assertThat(cart.getTotalQuantity()).isEqualTo(0);
+    }
 }
