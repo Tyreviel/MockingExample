@@ -73,4 +73,26 @@ public class ShoppingCart {
         }
         return totalPrice;
     }
+
+    public double applyPercentageDiscount(double percentage) {
+        if (percentage < 0 || percentage > 100) {
+            throw new IllegalArgumentException("Discount percentage must be between 0 and 100.");
+        }
+
+        double currentTotalPrice = calculateTotalPrice();
+        if (currentTotalPrice == 0.0) {
+            return 0.0;
+        }
+
+        double discountAmount = currentTotalPrice * (percentage / 100.0);
+        double discountedPrice = currentTotalPrice - discountAmount;
+
+        // Ensure discounted price is not negative
+        return Math.max(0.0, discountedPrice);
+    }
+
+    public void clear() {
+        products.clear();
+        totalQuantity = 0;
+    }
 }
