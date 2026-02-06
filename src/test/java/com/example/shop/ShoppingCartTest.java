@@ -226,4 +226,84 @@ class ShoppingCartTest {
         cart.addProduct(product, 2);
         assertThat(cart.calculateTotalPrice()).isEqualTo(39.98);
     }
+
+    // ========== Apply Percentage Discount tests ==========
+
+    @Test
+    @DisplayName("should apply a percentage discount to the total price")
+    void shouldApplyPercentageDiscount() {
+        Product product1 = new Product("P001", "Laptop", 1000.00);
+        Product product2 = new Product("P002", "Mouse", 100.00);
+        cart.addProduct(product1, 1);
+        cart.addProduct(product2, 1); // Total: 1100.00
+        double discountedPrice = cart.applyPercentageDiscount(10.0); // 10% discount
+        assertThat(discountedPrice).isEqualTo(990.00); // 1100 * 0.9 = 990
+    }
+
+    @Test
+    @DisplayName("should apply a zero percentage discount with no change in total price")
+    void shouldApplyZeroPercentageDiscount() {
+        Product product1 = new Product("P001", "Laptop", 1000.00);
+        cart.addProduct(product1, 1); // Total: 1000.00
+        double discountedPrice = cart.applyPercentageDiscount(0.0);
+        assertThat(discountedPrice).isEqualTo(1000.00);
+    }
+
+    @Test
+    @DisplayName("should cap total price at 0.0 when discount is 100%")
+    void shouldCapTotalPriceAtZeroWhenDiscountIsOneHundredPercent() {
+        Product product1 = new Product("P001", "Cheap Item", 10.00);
+        cart.addProduct(product1, 1); // Total: 10.00
+        double discountedPrice = cart.applyPercentageDiscount(100.0); // 100% discount
+        assertThat(discountedPrice).isEqualTo(0.0);
+    }
+
+    @Test
+    @DisplayName("should return 0.0 when applying discount to an empty cart")
+    void shouldReturnZeroWhenApplyingDiscountToEmptyCart() {
+        double discountedPrice = cart.applyPercentageDiscount(10.0);
+        assertThat(discountedPrice).isEqualTo(0.0);
+    }
+
+    @Test
+    @DisplayName("should throw IllegalArgumentException for negative discount percentage")
+    void shouldThrowExceptionForNegativeDiscountPercentage() {
+        Product product = new Product("P001", "Laptop", 1000.00);
+        cart.addProduct(product, 1);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            cart.applyPercentageDiscount(-5.0);
+        });
+    }
+
+    @Test
+    @DisplayName("should completely clear the cart")
+    void shouldClearCart() {
+        Product product1 = new Product("P001", "Laptop", 1200.00);
+        Product product2 = new Product("P002", "Mouse", 25.00);
+        cart.addProduct(product1, 1);
+        cart.addProduct(product2, 2);
+
+        cart.clear();
+
+        assertThat(cart.getTotalQuantity()).isEqualTo(0);
+        assertThat(cart.getProducts()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("should update product details when adding existing product with different name or price")
+    void shouldUpdateProductDetailsWhenAddingExistingProductWithDifferentNameOrPrice() {
+        Product originalProduct = new Product("P001", "Laptop", 1200.00);
+        cart.addProduct(originalProduct, 1);
+
+        Product updatedProduct = new Product("P001", "Gaming Laptop", 1500.00);
+        cart.addProduct(updatedProduct, 1);
+
+        assertThat(cart.getTotalQuantity()).isEqualTo(2);
+        assertThat(cart.getProducts()).hasSize(1);
+        
+        Product productInCart = cart.getProducts().keySet().iterator().next();
+        assertThat(productInCart.getName()).isEqualTo(updatedProduct.getName()); // This will now fail
+        assertThat(productInCart.getPrice()).isEqualTo(updatedProduct.getPrice()); // This will now fail
+        assertThat(cart.getProducts().get(productInCart)).isEqualTo(2);
+    }
 }

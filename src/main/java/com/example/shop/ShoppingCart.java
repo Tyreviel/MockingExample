@@ -25,7 +25,9 @@ public class ShoppingCart {
             return; // Do nothing if quantity is zero
         }
 
-        products.merge(product, quantity, Integer::sum);
+        int currentQuantity = products.getOrDefault(product, 0);
+        products.remove(product); // Remove the old entry
+        products.put(product, currentQuantity + quantity); // Add the new product with updated details and summed quantity
         totalQuantity += quantity;
     }
 
